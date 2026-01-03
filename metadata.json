@@ -1,0 +1,8 @@
+{
+  "name": "AgroDoc :  AI Plant Health Diagnostic",
+  "description": "A high-performance agricultural diagnostic tool that identifies plant diseases from images using Gemini AI, providing detailed treatment plans and product recommendations.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
