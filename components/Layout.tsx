@@ -26,6 +26,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, lang, onLangToggle }) 
             <button 
               onClick={onLangToggle}
               className="flex items-center bg-white border border-slate-200 rounded-full p-1 shadow-sm hover:shadow-md transition-all group overflow-hidden"
+              aria-label="Toggle Language"
             >
               <div className={`px-3 py-1 text-[10px] font-black rounded-full transition-all ${lang === 'en' ? 'bg-emerald-600 text-white' : 'text-slate-400'}`}>EN</div>
               <div className={`px-3 py-1 text-[10px] font-black rounded-full transition-all ${lang === 'hi' ? 'bg-emerald-600 text-white' : 'text-slate-400'}`}>हि</div>

@@ -1,12 +1,11 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { DiagnosisResult, GroundingSource } from "./types.ts";
 import { SYSTEM_INSTRUCTION, GEMINI_MODEL } from "./constants.tsx";
 
 export const diagnosePlant = async (base64Image: string, lang: 'en' | 'hi' = 'en'): Promise<DiagnosisResult> => {
-  // Check for API key and provide a helpful error message
-  if (!process.env.API_KEY) {
-    throw new Error("Missing Gemini API Key. Please ensure API_KEY is set in your environment variables and redeploy.");
+  // Validate API Key before proceeding
+  if (!process.env.API_KEY || process.env.API_KEY.trim() === '') {
+    throw new Error("API Key is missing. Please add API_KEY or VITE_GEMINI_API_KEY to your Vercel environment variables and redeploy.");
   }
 
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
@@ -107,9 +106,6 @@ export const diagnosePlant = async (base64Image: string, lang: 'en' | 'hi' = 'en
     return parsedResult;
   } catch (error: any) {
     console.error("Diagnosis Error:", error);
-    if (error.message?.includes("API key")) {
-      throw new Error("Invalid or missing API Key. Please check your Vercel environment variables.");
-    }
-    throw new Error(error.message || "Failed to process the image. Please try again with a clearer photo.");
+    throw error;
   }
 };

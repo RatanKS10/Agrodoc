@@ -1,4 +1,3 @@
-
 // Fixed missing React import for React.FC namespace
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { GoogleGenAI, Modality, Blob, LiveServerMessage } from '@google/genai';
@@ -91,10 +90,14 @@ export const LiveAssistant: React.FC<LiveAssistantProps> = ({ lang, onClose, con
 
   const startSession = useCallback(async () => {
     try {
+      // Validate key presence
+      if (!process.env.API_KEY || process.env.API_KEY.trim() === '') {
+        throw new Error("API Key is not configured correctly in the environment.");
+      }
+
       setIsConnecting(true);
       setError(null);
 
-      // Create AI instance immediately before use and use process.env.API_KEY exclusively
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       
       const inputAudioContext = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
@@ -128,7 +131,6 @@ export const LiveAssistant: React.FC<LiveAssistantProps> = ({ lang, onClose, con
             scriptProcessor.onaudioprocess = (audioProcessingEvent) => {
               const inputData = audioProcessingEvent.inputBuffer.getChannelData(0);
               const pcmBlob = createBlob(inputData);
-              // Solely rely on sessionPromise resolves to send data
               sessionPromise.then((session) => {
                 session.sendRealtimeInput({ media: pcmBlob });
               });
@@ -138,14 +140,12 @@ export const LiveAssistant: React.FC<LiveAssistantProps> = ({ lang, onClose, con
             scriptProcessor.connect(inputAudioContext.destination);
           },
           onmessage: async (message: LiveServerMessage) => {
-            // Extract audio output using property access
             const base64EncodedAudioString = message.serverContent?.modelTurn?.parts[0]?.inlineData?.data;
             
             if (base64EncodedAudioString) {
               const ctx = outputAudioContextRef.current!;
               if (ctx.state === 'suspended') await ctx.resume();
 
-              // Track playback start time for gapless audio
               nextStartTimeRef.current = Math.max(nextStartTimeRef.current, ctx.currentTime);
               
               const audioBuffer = await decodeAudioData(
