@@ -1,11 +1,7 @@
-
 import React from 'react';
 
 export const GEMINI_MODEL = 'gemini-3-flash-preview';
 export const LIVE_MODEL = 'gemini-2.5-flash-native-audio-preview-09-2025';
-
-// App Logo Reference
-export const APP_LOGO = 'agrix_logo.png';
 
 // Local references to the brand logos provided
 export const BRAND_LOGOS: Record<string, string> = {
@@ -61,6 +57,8 @@ export const TRANSLATIONS = {
     contactUs: "Contact Us",
     viewDetails: "View Product Details",
     partners: "Trusted Crop Care Partners",
+    footerTagline: "Next Gen Agricultural Intelligence",
+    footerSubTagline: "Empowering farmers with instant plant pathology and precision care.",
     testimonialsTitle: "What Our Farmers Say",
     testimonialsSubtitle: "Real Impact, Real Yields",
     testimonials: [
@@ -99,8 +97,8 @@ export const TRANSLATIONS = {
     refDb: "वैश्विक रोग डेटाबेस के साथ मिलान...",
     talkExpert: "एग्रिक्स विशेषज्ञ से बात करें",
     expertDesc: "अपनी भाषा में मौखिक मार्गदर्शन प्राप्त करें",
-    obs: "अवलोकन (Observations)",
-    protocol: "एआई उपचार (Protocol)",
+    obs: "अवलोकन",
+    protocol: "एआई उपचार",
     products: "देखभाल के उत्पाद",
     prevention: "निवारक रणनीतियां",
     newDiag: "नई जांच शुरू करें",
@@ -115,6 +113,8 @@ export const TRANSLATIONS = {
     contactUs: "संपर्क करें",
     viewDetails: "उत्पाद विवरण देखें",
     partners: "विश्वसनीय फसल देखभाल भागीदार",
+    footerTagline: "अगली पीढ़ी की कृषि खुफिया जानकारी",
+    footerSubTagline: "त्वरित पादप विकृति विज्ञान और सटीक देखभाल के साथ किसानों को सशक्त बनाना।",
     testimonialsTitle: "हमारे किसानों के अनुभव",
     testimonialsSubtitle: "सच्चा प्रभाव, बेहतर उपज",
     testimonials: [
@@ -147,6 +147,7 @@ If the plant is healthy, clearly state that.
 Return response in structured JSON format.
 Always find REAL, CURRENT agricultural products from major brands (Bayer, Syngenta, Corteva, BASF, FMC, UPL, Coromandel, IFFCO).
 For each product, provide a highly descriptive 'productImageUrl' and 'brandLogoUrl' if possible.
+IMPORTANT: You MUST return all text fields (diseaseName, summary, symptoms, treatmentSteps, preventiveMeasures, reason) in the requested language.
 `;
 
 export const LIVE_SYSTEM_INSTRUCTION = `

@@ -3,9 +3,14 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { DiagnosisResult, GroundingSource } from "./types.ts";
 import { SYSTEM_INSTRUCTION, GEMINI_MODEL } from "./constants.tsx";
 
-export const diagnosePlant = async (base64Image: string): Promise<DiagnosisResult> => {
-  // Always use process.env.API_KEY directly for initialization as per guidelines
+export const diagnosePlant = async (base64Image: string, lang: 'en' | 'hi' = 'en'): Promise<DiagnosisResult> => {
+  // Check for API key and provide a helpful error message
+  if (!process.env.API_KEY) {
+    throw new Error("Missing Gemini API Key. Please ensure API_KEY is set in your environment variables and redeploy.");
+  }
+
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const targetLanguage = lang === 'hi' ? 'Hindi' : 'English';
 
   const responseSchema = {
     type: Type.OBJECT,
@@ -64,7 +69,7 @@ export const diagnosePlant = async (base64Image: string): Promise<DiagnosisResul
       contents: [
         {
           parts: [
-            { text: "Perform a precise plant diagnosis. Use Google Search grounding to find EXACT agricultural products from global leaders like Bayer, Syngenta, BASF, and Corteva that are approved for this specific condition in 2024-2025. IMPORTANT: Try to provide real URLs for product packshots and company logos found during the search. If a specific image URL is unavailable, use the most accurate representative image from a known agricultural database or official catalog." },
+            { text: `Perform a precise plant diagnosis in ${targetLanguage}. Use Google Search grounding to find EXACT agricultural products from global leaders like Bayer, Syngenta, BASF, and Corteva that are approved for this specific condition in 2024-2025. IMPORTANT: All text in the JSON response must be in ${targetLanguage}.` },
             {
               inlineData: {
                 mimeType: "image/jpeg",
@@ -82,13 +87,11 @@ export const diagnosePlant = async (base64Image: string): Promise<DiagnosisResul
       }
     });
 
-    // Extracting text output from GenerateContentResponse via .text property
     const resultText = response.text;
     if (!resultText) throw new Error("No diagnosis received from AI");
     
     const parsedResult = JSON.parse(resultText) as DiagnosisResult;
 
-    // Extract search grounding URLs if present
     const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
     if (groundingChunks) {
       const sources: GroundingSource[] = groundingChunks
@@ -102,8 +105,11 @@ export const diagnosePlant = async (base64Image: string): Promise<DiagnosisResul
     }
 
     return parsedResult;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Diagnosis Error:", error);
-    throw new Error("Failed to process the image. Please try again with a clearer photo.");
+    if (error.message?.includes("API key")) {
+      throw new Error("Invalid or missing API Key. Please check your Vercel environment variables.");
+    }
+    throw new Error(error.message || "Failed to process the image. Please try again with a clearer photo.");
   }
 };

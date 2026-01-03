@@ -37,12 +37,13 @@ const App: React.FC = () => {
     setShowCamera(false);
     
     try {
-      const diagnosis = await diagnosePlant(base64);
+      // Pass the current language to the AI service
+      const diagnosis = await diagnosePlant(base64, lang);
       setState(prev => ({ ...prev, loading: false, result: diagnosis }));
     } catch (err: any) {
       setState(prev => ({ ...prev, loading: false, error: err.message || "An unexpected error occurred." }));
     }
-  }, []);
+  }, [lang]);
 
   const reset = () => {
     setState({

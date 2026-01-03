@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { TRANSLATIONS, Icons, APP_LOGO } from '../constants';
+import { TRANSLATIONS, Icons } from '../constants';
 import { BrandCarousel } from './BrandCarousel';
 
 interface LayoutProps {
@@ -50,20 +49,14 @@ export const Layout: React.FC<LayoutProps> = ({ children, lang, onLangToggle }) 
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">
             <div className="w-8 h-[1px] bg-slate-200"></div>
-            {lang === 'en' ? 'Next Gen Agricultural Intelligence' : 'अगली पीढ़ी की कृषि खुफिया जानकारी'}
+            {t.footerTagline}
             <div className="w-8 h-[1px] bg-slate-200"></div>
           </div>
           <p className="text-sm text-slate-500 max-w-xs mx-auto mb-6">
-            {lang === 'en' ? 'Empowering farmers with instant plant pathology and precision care.' : 'त्वरित पादप विकृति विज्ञान और सटीक देखभाल के साथ किसानों को सशक्त बनाना।'}
+            {t.footerSubTagline}
           </p>
           
           <div className="flex flex-col items-center gap-4">
-            <div className="pt-4 border-t border-slate-200/50 w-full max-w-[200px]">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">
-                A product of <a href="https://agrix.in" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:text-emerald-500 transition-colors font-black">Agrix.in</a>
-              </p>
-            </div>
-
             <a 
               href="mailto:agrix.mail@gmail.com"
               className="inline-flex items-center gap-2 px-6 py-2.5 bg-white border border-slate-200 rounded-full text-slate-600 hover:text-emerald-600 hover:border-emerald-200 hover:shadow-lg transition-all active:scale-95 group"
@@ -76,29 +69,6 @@ export const Layout: React.FC<LayoutProps> = ({ children, lang, onLangToggle }) 
           </div>
         </div>
       </footer>
-
-      <div className="fixed bottom-10 right-10 z-[40] pointer-events-none select-none">
-        <div className="opacity-50 hover:opacity-100 transition-opacity duration-700 ease-in-out flex flex-col items-end">
-          <img 
-            src={APP_LOGO} 
-            alt="Agrix.in" 
-            className="h-14 w-auto drop-shadow-sm mb-1"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              const parent = e.currentTarget.parentElement;
-              if (parent) {
-                const logoText = document.createElement('div');
-                logoText.innerText = 'Agrix.in';
-                logoText.className = 'text-emerald-800 font-["Dancing_Script"] font-bold text-3xl tracking-tight mb-1 drop-shadow-sm';
-                parent.prepend(logoText);
-              }
-            }}
-          />
-          <div className="flex flex-col items-end mr-2">
-             <span className="text-[9px] font-black text-slate-900 uppercase tracking-[0.2em]">ESTD 2020</span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
